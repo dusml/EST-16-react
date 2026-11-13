@@ -5,6 +5,7 @@ import JSXAttributes from './JSXAttributes';
 import ConditionalRendering from './ConditionalRendering';
 import ConditionalDisplay from './ConditionalDisplay';
 import RenderList from './RenderList';
+import RenderableValues from './RenderableValues';
 
 function JSX_Markup(): JSX.Element {
   const {
@@ -47,6 +48,7 @@ function JSX_Markup(): JSX.Element {
        */}
       <ConditionalDisplay isShowReactImage = {isShowReactImage}/>
       <RenderList items={statusMessagesWithID} reactLibrary={reactLibrary}/>
+      <RenderableValues/>
     </dl>
   )
 }

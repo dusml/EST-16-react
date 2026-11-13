@@ -1,75 +1,38 @@
-# React + TypeScript + Vite
+# Vite 사용자 정의 템플릿
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React, TypeScript, Vite 기반 아바타 페이지를 실습용 시작 프로젝트로 구성합니다.
 
-Currently, two official plugins are available:
+## 주요 파일
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `src/main.tsx`: React 루트 생성
+- `src/pages/AvatarPage.tsx`: 아바타 페이지
+- `src/components/Avatar.tsx`: 아바타 컴포넌트
+- `src/styles/`: 공통 스타일
+- `vite.config.ts`: Vite 설정
 
-## React Compiler
+## 실행 방법
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Node.js와 npm이 필요합니다. 저장소 루트에서 실행합니다.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+cd 04-vite-template/vite-custom-template
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+터미널에 표시된 Vite 개발 서버 주소에 접속합니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 실습 방법
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+`src/main.tsx`는 `import.meta.env.VITE_USER_NAME`을 콘솔에 출력합니다. 프로젝트 루트의 `.env.local`에 `VITE_USER_NAME=학습자`를 추가하고 서버를 재시작하면 값을 확인할 수 있습니다. `VITE_` 환경 변수에는 클라이언트에 공개 가능한 값을 사용합니다.
 
-```
+## 명령어
+
+| 명령어 | 용도 |
+| --- | --- |
+| `npm run dev` | 개발 서버 |
+| `npm run build` | TypeScript 검사와 배포 빌드 |
+| `npm run lint` | ESLint 검사 |
+| `npm run preview` | 빌드 결과 미리 보기 |
+
+`preview` 전에 `build`를 실행합니다.
