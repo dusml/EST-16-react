@@ -21,6 +21,9 @@
 
 import { useState } from "react";
 import EventHandleProp from "./responding-to-events/EventHandleProp"
+import UseStatateCounter from "./responding-to-events/UseStatateCounter";
+import EventPropgation from "./responding-to-events/EventPropgation";
+import EventWithSideEffects from "./responding-to-events/EventWithSideEffects";
 
 
 
@@ -66,6 +69,9 @@ function RespondingToEvents(){
         </div> 
       </form>
       <EventHandleProp text={text} setText={setText} message={message} onPrintMessage={updateMessage}/>
+      <UseStatateCounter />
+      <EventPropgation/>
+      <EventWithSideEffects />
     </div>
   )
 }
