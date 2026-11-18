@@ -1,11 +1,6 @@
-export type ProductType ={
-  id: number;
-  name: string;
-  price: number;
-  inStock: boolean;
-}
+import type { ProductType } from "./types/product";
 
-export const productData = [
+ const productData: ProductType[] = [
   { id: 1, name: "무선 키보드", price: 45000, inStock: true },
   { id: 2, name: "무선 마우스", price: 25000, inStock: false },
   { id: 3, name: "모니터 받침대", price: 32000, inStock: true },
@@ -15,3 +10,6 @@ export const productData = [
   { id: 7, name: "블루투스 스피커", price: 72000, inStock: false },
   { id: 8, name: "마우스 패드", price: 9000, inStock: true },
 ];
+
+
+export default productData

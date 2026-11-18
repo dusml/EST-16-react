@@ -1,5 +1,5 @@
 import ProductItem from "./ProductItem"
-import type { ProductType } from '../types/data'
+import type { ProductType } from '../types/product'
 
 interface Prop {
   productData: ProductType[];

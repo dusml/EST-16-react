@@ -16,7 +16,7 @@ function ProductSearch({searchTerm , onSearch}:Props) {
   const handleSearch_ = (e: React.ChangeEvent<HTMLInputElement>) => {
   
     // 검색창에서 변경된 입력값을 가져온다.
-    const value = e.currentTarget.value;
+    const value = e.target.value;
     // console.log(value); 벨루 확인..
     
     

@@ -1,4 +1,4 @@
-import type { ProductType } from '../types/data'
+import type { ProductType } from '../types/product'
 
 
 interface Props {
@@ -15,8 +15,8 @@ function ProductItem({product}:Props) {
   return (
     <li className={style}>
       <strong>{name}</strong>
-      <span className="price">{price}원</span>
-      <span className="badge">{product.inStock ? '재고 있음' : '재고 없음'}</span>
+      <span className="price">{price.toLocaleString()}원</span>
+      <span className="badge">{inStock ? '재고 있음' : '재고 없음'}</span>
     </li>
   )
 }

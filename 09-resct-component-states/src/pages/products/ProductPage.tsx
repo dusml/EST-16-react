@@ -2,12 +2,12 @@
 
 
 import { useState } from "react";
-import ProductList from "../components/ProductList";
-import ProductSearch from "../components/ProductSearch";
-import ProductStockFiler from "../components/ProductStockFiler";
+import ProductList from "./components/ProductList";
+import ProductSearch from "./components/ProductSearch";
+import ProductStockFiler from "./components/ProductStockFiler";
 import "./ProductPage.css";
 import { productData } from "./data";
-import ProductCount from "../components/ProductCount";
+import ProductCount from "./components/ProductCount";
 
 // console.log(productData);
 
@@ -40,11 +40,11 @@ function ProductPage() {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
     && (!stockOnly || product.inStock)
   );
+  //리스트도 바뀌여야 한다. 그해서..
 
   // 체크박스 이벤트
   const handleToggleProductStockFiler = () => setStockOnly(!stockOnly)
-      // console.log(filteredProducts.length) 
-      // console.log(productData.length) 
+
   return (
     <div className="ProductPage">
       <h1>상품 목록</h1>
@@ -52,14 +52,12 @@ function ProductPage() {
       <ProductSearch searchTerm={searchTerm} onSearch={handleSearch}/>
 
       <ProductStockFiler onToggle= {handleToggleProductStockFiler} stockOnly={stockOnly}/>
-      {/* 체크박스 */}
 
       {/* <ProductList productData={productData}/> */}
       <ProductList productData={filteredProducts}/>
 
       <ProductCount 
         totalProductCount={productData.length}
-        // 총 갯수
         filteredProductsCount = {filteredProducts.length}
       />
     
