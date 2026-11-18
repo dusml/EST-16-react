@@ -16,7 +16,7 @@ function NoteCreatePage({ onChangeRoute, newNoteId, onCreate }: Props) {
   return (
     <div className="NoteCreatePage">
       <BackLink onChangeRoute={handleBackLink} />
-      <NoteForm onCreate={onCreate} onBackLink={handleBackLink} newNoteId={newNoteId}/>
+      <NoteForm mode='create' onCreate={onCreate} onBackLink={handleBackLink} newNoteId={newNoteId}/>
     </div>
   )
 }

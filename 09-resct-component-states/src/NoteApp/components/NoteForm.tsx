@@ -1,8 +1,8 @@
 import { useId, useState } from 'react'
 import './NoteForm.css'
-import { getUserList } from '../api/getUser';
+import { getUser, getUserList } from '../api/getUser';
 import type { Note } from '../api/getNote';
-import { convertTextToHTMLString } from '@/utils/convertTextToHTMLString';
+import { convertHTMLToText, convertTextToHTMLString } from '@/utils/convertTextToHTMLString';
 
 
 interface FormData {
@@ -20,26 +20,57 @@ const userList = getUserList();
 
 
 interface Props {
-  onCreate: (newNoteItem: Note) => void;
+  newNoteId?: number;
+  mode: 'create' | 'edit';
+  note?:Note;
   onBackLink: () => void;
-  newNoteId: number;
+  onCreate?: (newNoteItem: Note) => void;
+  onEdit?:(willEditNote:Note) => void;
+  onDelete?:(willDeleteNoteId: number) => void
 }
 
 
 
-function NoteForm({onBackLink, onCreate, newNoteId}:Props) {
+function NoteForm({ onBackLink, onCreate, newNoteId, mode, note, onEdit, onDelete }:Props) {
 
   const titleId = useId();
   const contentId = useId();
   const userId = useId();
 
   // 입력칸 여러개 관리 -> 상태관리 객체 하나로 상태관리 안그러면 유즈스테리트가 망히 낭ㅎ게떄문
-  const [formData, setFormData] = useState<FormData>({
+  /* const [formData, setFormData] = useState<FormData>({
     title: '',
     content: '',
     userId: 0
+  }); 
+  mode: 'create' | 'edit'; 조건에 따라서 바뀌어야 하기 때문에 밑에 식을 사용을 한다. 콜백을 사용하는 이유는 조건문을 널허야 하기 때문이다.
+  */
+
+  const [formData, setFormData] = useState<FormData>(()=>{
+
+    // edit 모드에서 객체의 값을 설정
+    if(mode === 'edit' && note){
+      return{
+        title:note.title,
+        content: convertHTMLToText(note.content), //이거응 하지 않으면 태그가 그대로 나오기 떄문에 작정을 해주어야 한다.
+        userId: note.userId
+      }
+    }
+
+    // create 모드에서 객체의 값을 비워두는 설정
+    return{
+      title: '',
+      content: '',
+      userId: 0
+    }
+
+
   });
-  console.log(formData);
+
+
+  const isCreateMode = mode.includes('create');
+
+  // console.log(formData);
   
 
   // title input에 글자를 입력하면 formData가 업데이트가 될 수 있도록 만들어주세요
@@ -76,8 +107,8 @@ function NoteForm({onBackLink, onCreate, newNoteId}:Props) {
   // form에 핸들러 연결 ✔️
   // handleCreateNote 안에서
   //  -> formData에서 필요한 값을 구조분해
-  //  -> user의 항목 1개 가져오기 ..??find
-  //  -> newNote 객체 만들기 ....?????
+  //  -> user의 항목 1개 가져오기
+  //  -> newNote 객체 만들기
   //      -> content는 covertTextToHTMLString함수를 사용해서
   //  -> 객체 값 조립
   //  -> onCreate에 완성된 객체 전달
@@ -85,27 +116,78 @@ function NoteForm({onBackLink, onCreate, newNoteId}:Props) {
 
   const handleCreateNote = (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
+    // console.log('전송 성공');
+    
     
     const {title, content, userId} = formData;
 
-    const user = userList.find((item)=> {
-      return item.id === userId
-    })
+    const newUserId = Number(userId); // 문자에서 숫자로 들어가겠금 그 셀러터는 문자로 들어오기 떄문이다..??
+    const user = getUser(newUserId);
     // console.log(user);
+
+    if(!user) return; //작성자가 없으면 고르지 않으면 리텅
+    if(!newUserId || !newNoteId) return; //or연산자고 한번에 작성도 가능
+
+
+    /* const user = userList.find((item)=> {
+      return item.id === userId
+    }) */
+
+
+    //새로운 객제
     const newNote = {
       id: newNoteId,
-      title,
-      content:convertTextToHTMLString(content)
+      title:title.trim(),
+      content:convertTextToHTMLString(content),
+      userId: newUserId,
+      createdAt:'',
+      updatedAt:'',
+      expand:{
+        user:user
+      }
     };
+
+    onCreate?.(newNote);
+    onBackLink();//목록으로 되돌아 가기
     
   }
+
+  //수정 부분
+  const handleEidt = (e:React.FormEvent<HTMLFormElement>) =>{
+    // console.log('aaa');
+    e.preventDefault();
+
+    if (note && onEdit) {
+      const willEditNote = {
+        ...note,
+        title: formData.title.trim(),
+        content: convertTextToHTMLString(formData.content),
+        userId: Number(formData.userId)
+      };
+
+      onEdit(willEditNote);
+      onBackLink();
+    }
+  }
+
+  // 삭제부분
+  const handleDelete = () => {
+
+    if(note && onDelete){
+      onDelete(note.id);
+      onBackLink();
+    }
+
+  }
+
+  
 
   return (
 
     //form에게 주면 된다.. 꼭 초기화 버듵에 주지 랂아고 가지고 있느 함수가 ㅣㅇㅆ다.onReset 서브밋이라 같은 ..??
     // reset 버튼은 DOM만 비움 -> 상태도 비워야 화면이 초기화가 됨
 
-    <form className="NoteForm" onReset={handleReset} onSubmit={handleCreateNote}>
+    <form className="NoteForm" onReset={handleReset} onSubmit={isCreateMode ? handleCreateNote : handleEidt}>
 
       <div className="formControl">
         <label htmlFor={titleId}>제목</label>
@@ -117,7 +199,7 @@ function NoteForm({onBackLink, onCreate, newNoteId}:Props) {
         <textarea id={contentId} name="content" value={formData.content} onChange={handleUpdateFormData} />
       </div>
 
-      <div className="formControl">
+      {/* <div className="formControl">
         <label htmlFor={userId}></label>
         <select
           name="userId"
@@ -131,14 +213,36 @@ function NoteForm({onBackLink, onCreate, newNoteId}:Props) {
                 <option key={user.id} value={user.id}>{user.name}</option>
               ))
             }
-
           </select>
-      </div>
+      </div> 
+      조건에 따라서 해야 하기 때문에 아래와 같이 작성을 한다.
+      */}
+
+      {
+        isCreateMode && (
+          <div className="formControl">
+            <label htmlFor={userId}></label>
+            <select
+              name="userId"
+              id={userId}
+              value={formData.userId}
+              onChange={handleUpdateFormData}
+              >
+                <option value={0}>작성자 선택</option>
+                {
+                  userList.map((user) => (
+                    <option key={user.id} value={user.id}>{user.name}</option>
+                  ))
+                }
+          </select>
+        </div>
+        )
+      }
 
 
       <div className="buttonGroup">
-        <button type="submit">추가</button>
-        <button type="reset">초기화</button>
+        <button type="submit">{isCreateMode  ? '추가' : '수정'}</button>
+        {isCreateMode ? <button type="reset">초기화</button> : <button type="button" onClick={handleDelete}>삭제</button>}
       </div>
 
     </form>

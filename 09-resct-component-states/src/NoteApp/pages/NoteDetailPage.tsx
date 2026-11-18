@@ -1,4 +1,5 @@
-import { getNoteItem } from "../api/getNote";
+import { convertSlug } from "@/utils/convertSlug";
+import { getNoteItem, type Note } from "../api/getNote";
 import BackLink from "../components/BackLink";
 import PrintError from "../components/PrintError";
 import { ROUTES } from "../routes";
@@ -7,16 +8,17 @@ import "./NoteDetailPage.css";
 interface Props {
   noteId: number | null;
   onChangeRoute: (nextRoute: string, pickNoteId: number) => void;
+  note: Note | null
 }
 
-function NoteDetailPage({ noteId , onChangeRoute }: Props) {
+function NoteDetailPage({ noteId, note , onChangeRoute }: Props) {
   // noteId = null;
   // noteId = 3;
 
   if (!noteId)
     return <PrintError> 이런 !!!! 노트를 찾을 수 없습니다. </PrintError>;
 
-  const note = getNoteItem(noteId);
+  // const note = getNoteItem(noteId); 위에 노트를 준다. 
 
   const createMarkup = () => {
     if (!note) return;
@@ -25,6 +27,10 @@ function NoteDetailPage({ noteId , onChangeRoute }: Props) {
 
   const handleBackToList = () => onChangeRoute(ROUTES.list, 0)
 
+  const handleChangeRoute = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onChangeRoute(ROUTES.edit, noteId);
+  };
 
 
   return (
@@ -34,9 +40,11 @@ function NoteDetailPage({ noteId , onChangeRoute }: Props) {
       {note && (
         <>
           <h2>{note.title}</h2>
-          <span>{note.expand?.user.name}</span>
+          <span>
+            {note.expand?.user.name}
+            <a href={`#/edit/${convertSlug(note.title)}`} onClick={handleChangeRoute}>수정</a>
+            </span>
           <div dangerouslySetInnerHTML={createMarkup()} />
-          
         </>
       )}
     </div>
