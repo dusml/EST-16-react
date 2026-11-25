@@ -4,7 +4,8 @@ import '@/styles/main.css';
 // import Effect from './components/effect/Effect';
 // import Parent from './components/ref/Parent';
 // import Parent from './components/effectAndRef/Parent';
-import Parent from './components/layoutEffect/Parent';
+// import Parent from './components/layoutEffect/Parent';
+import App from './components/context/App';
 
 
 const container = document.getElementById('react-app');
@@ -15,7 +16,8 @@ if (container) {
       {/* <main>main</main> */}
 
       {/* <Effect/> */}
-      <Parent/>
+      {/* <Parent/> */}
+      <App/>
 
 
 
