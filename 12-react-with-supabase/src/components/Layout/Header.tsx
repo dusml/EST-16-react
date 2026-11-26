@@ -1,6 +1,7 @@
 import { routes } from '@/router/router';
 import S from './Header.module.css';
 import NavLink from '../NavLink';
+import { useAuth } from '../auth/AuthProvider';
 
 
 
@@ -8,11 +9,28 @@ function Header() {
 
   // routes
 
+  const { user, isAuth, logOut } = useAuth();
+  // console.log(data);
+  // console.log(isAuth);
+  // console.log(user);
+
+  const hideWhenLoggedIn = ['로그인','회원가입']
+
+  const visibleRoutes = routes.filter(
+    ({title})=> !(isAuth && hideWhenLoggedIn.includes(title))
+  )
+
+  // 로그아웃 버튼이 필요함  isAuth
+  // 그 버튼에 핸들러가 연결 동작
+  // supabase의 signOut()
+  // useAuth훅 업데이트
+
   return (
     <header className={S.header}>
       <h1><img width={120} src="/logo_2.png" alt="" /></h1>
       <nav>
         <h2 className="a11y-hidden">메인 메뉴</h2>
+        {user && <p className={S.greeting}>{user.nickname}님 반갑습니다 ❤️</p>}
         {/* <ul>
           <li><a href="/">메인</a></li>
           <li><a href="/product">상품목록</a></li>
@@ -22,7 +40,8 @@ function Header() {
         </ul> */}
         <ul>
           {
-            routes.map(({path, title})=>(
+            // routes.map(({path, title})=>( 이걸 아래로 바꾸기
+            visibleRoutes.map(({path, title})=>(
               <li key={path}>
                 <NavLink
                   to={path}
@@ -30,6 +49,24 @@ function Header() {
                 >{title}</NavLink>
               </li>
             ))
+          }
+          {/* 여기에 로그아웃 버튼 추가하기 */}
+          {
+            isAuth && (
+              <li>
+                <a href="#"
+                  className={S.logout}
+                  onClick={(e)=>{
+                    e.preventDefault();
+                    if(confirm('너... 진짜 떠날꺼야? 넌 예쁘지 않아 죄를 지었어')){
+                      logOut();
+                    }
+                  }}
+                >
+                  로그아웃
+                </a>
+              </li>
+            )
           }
         </ul>
       </nav>
