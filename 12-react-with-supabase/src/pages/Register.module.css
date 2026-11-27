@@ -122,3 +122,40 @@
     text-align: center;
   }
 }
+
+/* ===== 오류 메시지 (Login과 같은 모양) ===== */
+.container .error {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ffd6dc;
+  border-left: 4px solid #e5484d;
+  border-radius: 10px;
+  background-color: #fff5f6;
+  color: #c4323a;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  animation: errorIn 0.25s ease-out;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background-color: #e5484d;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+@keyframes errorIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

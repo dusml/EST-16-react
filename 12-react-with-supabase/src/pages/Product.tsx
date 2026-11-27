@@ -1,9 +1,11 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import S from './Product.module.css'
 import gsap from 'gsap'
 // import supabase from '@/supabase/supabase'
 import useProducts from '@/hook/useProducts';
 import { useGSAP } from '@gsap/react';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { RouterContext } from '@/router/RouterProvider';
 
 function Product() {
 
@@ -11,10 +13,16 @@ function Product() {
   // supabase.from('products').select('*').then(console.log);
   const {products, loading} = useProducts();
 
-  console.log(products, loading);
+  const { isAuth } = useAuth();
+  // console.log(isAuth);
+  
+
+  // console.log(products, loading);
   
 
   const UL = useRef<HTMLUListElement>(null);
+
+const {setHistoryRoute} = useContext(RouterContext)!;
 
   /* useEffect(()=>{
     if(!UL.current) return;
@@ -34,6 +42,9 @@ function Product() {
   }, [products]) */
 
   useGSAP(() => {
+
+    if (!UL.current || !UL.current.children) return;
+
     gsap.fromTo('li', {
       y: 30,
       opacity: 0
@@ -42,18 +53,46 @@ function Product() {
       opacity: 1,
       stagger: 0.1
     })
-  }, {dependencies: [products], scope: UL, revertOnUpdate: true});
+  }, {dependencies: [products, isAuth], scope: UL, revertOnUpdate: true});
 
-  if(loading) return <p>로딩중....❤️</p>
+
+  const handleRouter = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+
+    history.pushState(null, '', `/Product/${id}`)
+    setHistoryRoute(`/Product/${id}`)
+  }
+
+  const handleCreate = () => {
+    history.pushState(null, '', '/Create');
+    setHistoryRoute('/Create');
+  }
+
+  if(loading) return <p className={S.loading}>로딩중....❤️</p>
+  // 로그링 되지 않으면..? 프로텍트라우팅..?? 이게 유스어스랑..?? 서비스 만들때 하나 만들어 두면 편하다.. 
+  if (!isAuth) {
+  return (
+    <div className={S.invalid}>
+      <span style={{fontSize:'10rem'}}>⚠️</span>
+      <h3>상품 목록은 로그인 후 이용 가능합니다.</h3>
+      <a href="">설마? 아직도 효블리 회원이 아니세요??????</a>
+    </div>
+  )
+}
 
   return (
     <div className={S.container}>
+      <div className={S.toolbar} >
+        <button className={S.createButton} type="button" onClick={handleCreate}>
+          + 상품등록
+        </button>
+      </div>
       <ul ref={UL}>
         {
           products &&
           products.map((item) => (
             <li key={item.id}>
-              <a href="/">
+              <a href={`/Product/${item.id}`} onClick={(e)=> handleRouter(e, item.id)}>
                 <figure>
                   <img src={item.image_url} alt="" />
                 </figure>

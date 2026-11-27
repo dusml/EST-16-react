@@ -182,7 +182,10 @@ function Register() {
         </div>
         <button type="submit">가입하기</button>
         {error && (
-          <p style={{color:'red', marginTop:'1rem'}}>{error}</p>
+          <p className={S.error} role="alert">
+            <span className={S.errorIcon} aria-hidden="true">!</span>
+            {error}
+          </p>
         )}
       </form>
     </div>
