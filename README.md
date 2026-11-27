@@ -32,7 +32,7 @@
 | 4 | [`09-resct-component-states`](./09-resct-component-states/) | 컴포넌트 상태 설계 | 상태 끌어올리기, 파생 상태, CRUD, debounce |
 | 4 | [`10-snapshot`](./10-snapshot/) | 스냅샷과 메모이제이션 | 스냅샷, 지연 초기화, 제어 입력, `memo`, `useCallback`, `useMemo` |
 | 5 | [`11-fetching-data`](./11-fetching-data/) | Effect, Ref, Context | `useEffect`, `useRef`, `useLayoutEffect`, Context, 커스텀 훅 |
-| 5 | [`12-react-with-supabase`](./12-react-with-supabase/) | React + Supabase | 회원가입·로그인, 인증 Context, DB 조회, SPA 라우터 |
+| 5 | [`12-react-with-supabase`](./12-react-with-supabase/) | React + Supabase | 회원가입·로그인, 인증 Context, 상품 조회·등록·수정, 동적 라우팅 |
 
 ## 2. 단계별 학습 내용
 
@@ -76,7 +76,8 @@ Effect로 서버와 통신하고, Context로 앱 전체에 데이터를 공유�
 
 - 서버 요청은 `useEffect` 안에서 실행하고 cleanup으로 정리합니다.
 - props drilling은 Context API와 커스텀 훅으로 해결합니다.
-- Supabase `auth`로 회원가입·로그인·로그아웃, `from()`으로 데이터 조회를 처리합니다.
+- Supabase `auth`로 회원가입·로그인·로그아웃, `from()`으로 데이터 조회·추가·수정, `storage`로 이미지 업로드를 처리합니다.
+- `/Product/:id` 같은 동적 경로를 직접 만든 라우터로 처리합니다.
 
 ## 3. 사용 기술
 
